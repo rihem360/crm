@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\teams;
-use App\Models\Staff;
-
+use App\Models\staff;
 use App\Http\Resources\TeamResource;
 use App\Http\Resources\StaffResource;
-use App\Http\Requests\StoreteamsRequest;
-use App\Http\Requests\UpdateteamsRequest;
+use App\Http\Requests\TeamRequest;
 
 class TeamsController extends Controller
 {
@@ -21,29 +19,19 @@ class TeamsController extends Controller
     {
         return response()->json([
             'status' => 200,
-            'teams' => TeamResource::collection(Team::all())
+            'teams' => TeamResource::collection(teams::all())
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreteamsRequest  $request
+     * @param  \App\Http\Requests\TeamRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreteamsRequest $request)
+    public function store(TeamRequest $request)
     {
-        $teams = Team::create([
+        $team = teams::create([
             'pseudo' => $request->input('pseudo'),
         ]);
         $members = array();
@@ -53,20 +41,20 @@ class TeamsController extends Controller
         }
         return response()->json([
             'status' => 200,
-            'team' => new TeamResource($teams),
-            'staff' => StaffResource::collection($teams->staff)
+            'team' => new TeamResource($team),
+            'staff' => StaffResource::collection($team->staff)
         ]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\teams  $teams
+     * @param  \App\Models\teams  $team
      * @return \Illuminate\Http\Response
      */
-    public function show(teams $teams)
+    public function show(teams $team)
     {
-        if(!$teams) {
+        if(!$team) {
             return response()->json([
                 'status' => 401,
                 'message' => 'The team data does not exist'
@@ -79,39 +67,28 @@ class TeamsController extends Controller
         }
         return response()->json([
             'status' => 200,
-            'equipe' => new TeamResource($teams),
+            'equipe' => new TeamResource($team),
             'members' => $members
         ]);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\teams  $teams
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(teams $teams)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateteamsRequest  $request
-     * @param  \App\Models\teams  $teams
+     * @param  \App\Http\Requests\TeamRequest  $request
+     * @param  \App\Models\teams  $team
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateteamsRequest $request, teams $teams)
+    public function update(TeamRequest $request, teams $team)
     {
-        if(!$teams) {
+        if(!$team) {
             return response()->json([
                 'status' => 401,
                 'message' => 'The team data does not exist'
             ]);
         }
         else {
-            $teams->update([
+            $team->update([
                 'pseudo' => $request->input('pseudo'),
             ]);
             $members = array();
@@ -121,8 +98,8 @@ class TeamsController extends Controller
             }
             return response()->json([
                 'status' => 200,
-                'team' => new TeamResource($teams),
-                'staff' => StaffResource::collection($teams->staff)
+                'team' => new TeamResource($team),
+                'staff' => StaffResource::collection($team->staff)
             ]);
         }
     }
@@ -130,19 +107,19 @@ class TeamsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\teams  $teams
+     * @param  \App\Models\teams  $team
      * @return \Illuminate\Http\Response
      */
-    public function destroy(teams $teams)
+    public function destroy(teams $team)
     {
-        if(!$teams) {
+        if(!$team) {
             return response()->json([
                 'status' => 401,
                 'message' => 'The team data does not exist'
             ]);
         }
         else {
-            $teams->delete();
+            $team->delete();
             return response()->json([
                 'status' => 204,
                 'message' => 'Deleted successfully!'

@@ -17,18 +17,8 @@ class StaffController extends Controller
     {
         return response()->json([
             'status' => 200,
-            'staff' => StaffResource::collection(Staff::all())
+            'staff' => StaffResource::collection(staff::all())
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -40,7 +30,7 @@ class StaffController extends Controller
     public function store(StaffRequest $request)
     {
         $password = $request->input('password');
-        $staff = Staff::create([
+        $staff = staff::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
@@ -86,17 +76,6 @@ class StaffController extends Controller
                 'staff' => new StaffResource($staff)
             ]);
         }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\staff  $staff
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(staff $staff)
-    {
-        //
     }
 
     /**

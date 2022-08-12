@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Response;
-use App\Models\Ticket;
-use App\Models\Contact;
+use App\Models\responses;
+use App\Models\tickets;
+use App\Models\contact;
 use App\Http\Resources\ResponseResource;
 use App\Http\Resources\TicketResource;
 use App\Http\Resources\ContactResource;
@@ -22,18 +22,8 @@ class ResponsesController extends Controller
     {
         return response()->json([
             'status' => 200,
-            'responses' => ResponseResource::collection(Response::all())
+            'responses' => ResponseResource::collection(responses::all())
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -62,55 +52,44 @@ class ResponsesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Response  $response
+     * @param  \App\Models\responses  $response
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(responses $response)
     {
-        $responses = Response::where('id', $id)->first();
-        if(!$responses) {
+        if(!$response) {
             return response()->json([
                 'status' => 401,
                 'message' => 'The response data does not exist'
             ]);
         }
         else {
-            $ticket = $responses->ticket;
+            $ticket = $response->ticket;
             return response()->json([
                 'status' => 200,
-                'response' => new ResponseResource($responses),
-                'tickets' => new ResponseResource($tickets)
+                'response' => new ResponseResource($response),
+                'tickets' => new TicketResource($ticket)
             ]);
         }
-    }
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Response  $responses
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Response $responses)
-    {
-        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\ResponseRequest  $request
-     * @param  \App\Models\Response  $response
+     * @param  \App\Models\responses  $response
      * @return \Illuminate\Http\Response
      */
-    public function update(ResponseRequest $request, Response $responses)
+    public function update(ResponseRequest $request, responses $response)
     {
-        if(!$responses) {
+        if(!$response) {
             return response()->json([
                 'status' => 401,
                 'message' => 'The response data does not exist'
             ]);
         }
         else {
-            $responses = update(([
+            $response = update(([
                 'ticket_id' => $request->input('ticket_id'),
                 'titre' => $request->input('titre'),
                 'description' => $request->input('description'),
@@ -120,26 +99,26 @@ class ResponsesController extends Controller
 
             return response()->json([
                 'status' => 200,
-                'response' => new ResponseResource($responses)
+                'response' => new ResponseResource($response)
             ]);
         }
     }
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Response  $responses
+     * @param  \App\Models\response  $response
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Response $responses)
+    public function destroy(responses $response)
     {
-        if(!$responses) {
+        if(!$response) {
             return response()->json([
                 'status' => 401,
                 'message' => 'The response data does not exist'
             ]);
         }
         else {
-            $responses->delete();
+            $response->delete();
             return response()->json([
                 'status' => 204,
                 'message' => 'Deleted successfully!'

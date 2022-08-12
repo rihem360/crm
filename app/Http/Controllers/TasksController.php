@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Task;
-use App\Models\Project;
-use App\Models\Staff;
-use App\Models\Subtasks;
+use App\Models\task;
+use App\Models\project;
+use App\Models\staff;
+use App\Models\subtask;
 use App\Http\Resources\TaskResource;
 use App\Http\Resources\SubtaskResource;
 use App\Http\Resources\ProjectResource;
@@ -23,29 +23,19 @@ class TasksController extends Controller
     {
         return response()->json([
             'status' => 200,
-            'tasks' => TaskResource::collection(Task::all())
+            'tasks' => TaskResource::collection(task::all())
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoretaskRequest  $request
+     * @param  \App\Http\Requests\TaskRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoretaskRequest $request)
+    public function store(TaskRequest $request)
     {
-        $task = Task::create(([
+        $task = task::create(([
             'project_id' => $request->input('project_id'),
             'staff_id' => $request->input('staff_id'),
             'titre' => $request->input('titre'),
@@ -68,7 +58,6 @@ class TasksController extends Controller
      */
     public function show(task $task)
     {
-        $task = Task::where('id', $id)->first();
         if(!$task) {
             return response()->json([
                 'status' => 401,
@@ -84,7 +73,7 @@ class TasksController extends Controller
                 'status' => 200,
                 'task' => new TaskResource($task),
                 'project' => new ProjectResource($project),
-                'staff' => new staffResource($staff),
+                'staff' => new StaffResource($staff),
                 'subtasks' => SubtaskResource::collection($subtasks),
                 
             ]);
@@ -92,26 +81,14 @@ class TasksController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(task $task)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdatetaskRequest  $request
+     * @param  \App\Http\Requests\TaskRequest  $request
      * @param  \App\Models\task  $task
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatetaskRequest $request, task $task)
+    public function update(TaskRequest $request, task $task)
     {
-        $task = Task::where('id', $id)->first();
         if(!$task) {
             return response()->json([
                 'status' => 401,
@@ -143,6 +120,18 @@ class TasksController extends Controller
      */
     public function destroy(task $task)
     {
-        //
+        if(!$task) {
+            return response()->json([
+                'status' => 401,
+                'message' => 'The subtask data does not exist'
+            ]);
+        }
+        else {
+            $task->delete();
+            return response()->json([
+                'status' => 204,
+                'message' => 'Deleted successfully!'
+            ]);
+        }
     }
 }

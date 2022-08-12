@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\tickets;
-use App\Models\Contact;
+use App\Models\contact;
 use App\Http\Resources\TicketResource;
 use App\Http\Resources\ContactResource;
-use App\Http\Requests\StoreticketsRequest;
-use App\Http\Requests\UpdateticketsRequest;
+use App\Http\Requests\TicketRequest;
 
 class TicketsController extends Controller
 {
@@ -20,98 +19,74 @@ class TicketsController extends Controller
     {
         return response()->json([
             'status' => 200,
-            'tickets' => TicketResource::collection(Ticket::all())
+            'tickets' => TicketResource::collection(tickets::all())
         ]); 
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreticketsRequest  $request
+     * @param  \App\Http\Requests\TicketRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreticketsRequest $request)
+    public function store(TicketRequest $request)
     {
-        //$client = Client::find(Auth::client()->id);
-        //if ($client->etat != "prospection"){
-            $tickets = Ticket::create(([
-                'contact_id' => $request->input('contact_id'),
-                'project_id' => $request->input('project_id'),
-                'titre' => $request->input('titre'),
-                'description' => $request->input('description'),
-                'file' => $request->input('file')
-            ]));
-        //}
+        $ticket = tickets::create(([
+            'contact_id' => $request->input('contact_id'),
+            'project_id' => $request->input('project_id'),
+            'titre' => $request->input('titre'),
+            'description' => $request->input('description'),
+            'file' => $request->input('file')
+        ]));
 
         return response()->json([
             'status' => 200,
-            'ticket' => new TicketResource($tickets)
+            'ticket' => new TicketResource($ticket)
         ]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\tickets  $tickets
+     * @param  \App\Models\tickets  $ticket
      * @return \Illuminate\Http\Response
      */
-    public function show(tickets $tickets)
+    public function show(tickets $ticket)
     {
  
-       if(!$tickets) {
+       if(!$ticket) {
         return response()->json([
             'status' => 401,
             'message' => 'The ticket data does not exist'
         ]);
     }
     else {
-        $contact = $tickets->contact;
+        $contact = $ticket->contact;
         return response()->json([
             'status' => 200,
-            'ticket' => new TicketResource($tickets),
-           
+            'ticket' => new TicketResource($ticket),
+            'contact' => new ContactResource($contact)
         ]);
     }
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\tickets  $tickets
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(tickets $tickets)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateticketsRequest  $request
-     * @param  \App\Models\tickets  $tickets
+     * @param  \App\Http\Requests\TicketRequest  $request
+     * @param  \App\Models\tickets  $ticket
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateticketsRequest $request, tickets $tickets)
+    public function update(TicketRequest $request, tickets $ticket)
     {
-        if(!$tickets) {
+        if(!$ticket) {
             return response()->json([
                 'status' => 401,
                 'message' => 'The ticket data does not exist'
             ]);
         }
         else {
-            $tickets->update(([
+            $ticket->update(([
                 'contact_id' => $request->input('contact_id'),
                 'project_id' => $request->input('projet_id'),
                 'titre' => $request->input('titre'),
@@ -129,19 +104,19 @@ class TicketsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\tickets  $tickets
+     * @param  \App\Models\tickets  $ticket
      * @return \Illuminate\Http\Response
      */
-    public function destroy(tickets $tickets)
+    public function destroy(tickets $ticket)
     {
-        if(!$tickets) {
+        if(!$ticket) {
             return response()->json([
                 'status' => 401,
                 'message' => 'The ticket data does not exist'
             ]);
         }
         else {
-            $tickets->delete();
+            $ticket->delete();
             return response()->json([
                 'status' => 204,
                 'message' => 'Deleted successfully!'

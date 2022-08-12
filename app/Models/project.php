@@ -14,7 +14,6 @@ class project extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'ticket_id',
         'team_id',
         'project_name',
         'description',
