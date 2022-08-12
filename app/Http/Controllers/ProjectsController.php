@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Project;
-use App\Models\Teams;
-use App\Models\Task;
+use App\Models\project;
+use App\Models\teams;
+use App\Models\task;
 use App\Http\Resources\ProjectResource;
 use App\Http\Resources\TeamResource;
 use App\Http\Resources\TaskResource;
@@ -21,18 +21,8 @@ class ProjectsController extends Controller
     {
         return response()->json([
             'status' => 200,
-            'projets' => ProjectResource::collection(Project::all())
+            'projets' => ProjectResource::collection(project::all())
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -43,7 +33,7 @@ class ProjectsController extends Controller
      */
     public function store(ProjectRequest $request)
     {
-        $project = Project::create([
+        $project = project::create([
             'team_id' => $request->input('team_id'),
             'project_name' => $request->input('project_name'),
             'description'=> $request->input('description'),
@@ -61,15 +51,15 @@ class ProjectsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Project  $projet
+     * @param  \App\Models\project  $project
      * @return \Illuminate\Http\Response
      */
-    public function show(Project $project)
+    public function show(project $project)
     {
         if(!$project) {
             return response()->json([
                 'status' => 401,
-                'message' => 'The staff member data does not exist'
+                'message' => 'The project data does not exist'
             ]);
         }
         else {
@@ -78,31 +68,20 @@ class ProjectsController extends Controller
             return response()->json([
                 'status' => 200,
                 'projet' => new ProjectResource($project),
-                'team' => new TeamsResource($teams),
-                'task' => TasksResource::collection($tasks)
+                'team' => new TeamResource($teams),
+                'task' => TaskResource::collection($tasks)
             ]);
         }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Projet  $projet
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Project $project)
-    {
-        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\ProjectRequest  $request
-     * @param  \App\Models\Project  $projet
+     * @param  \App\Models\project  $project
      * @return \Illuminate\Http\Response
      */
-    public function update(ProjectRequest $request, Projet $project)
+    public function update(ProjectRequest $request, project $project)
     {
         if(!$project) {
             return response()->json([
@@ -130,10 +109,10 @@ class ProjectsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Project  $projet
+     * @param  \App\Models\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Project $project)
+    public function destroy(project $project)
     {
         if(!$project) {
             return response()->json([

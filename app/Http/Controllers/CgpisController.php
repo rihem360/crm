@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\cgpi;
-use App\Http\Requests\StorecgpiRequest;
-use App\Http\Requests\UpdatecgpiRequest;
+use App\Http\Resources\CgpiResource;
+use App\Http\Requests\CgpiRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\AccessCredentials;
 use Illuminate\Support\Facades\Notification;
@@ -19,35 +19,23 @@ class CgpisController extends Controller
     {
         return response()->json([
             'status' => 200,
-            'cgpis' => CgpiResource::collection(Cgpi::all())
+            'cgpis' => CgpiResource::collection(cgpi::all())
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StorecgpiRequest  $request
+     * @param  \App\Http\Requests\CgpiRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorecgpiRequest $request)
+    public function store(CgpiRequest $request)
     {
-        $cgpi = Cgpi::create(([
+        $cgpi = cgpi::create(([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
             'num_tel' => $request->input('num_tel'),
-            'staff' => $request->input('staff'),
-            
         ]));
 
         return response()->json([
@@ -79,12 +67,13 @@ class CgpisController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Update the specified resource in storage.
      *
+     * @param  \App\Http\Requests\CgpiRequest  $request
      * @param  \App\Models\cgpi  $cgpi
      * @return \Illuminate\Http\Response
      */
-    public function edit(cgpi $cgpi)
+    public function update(CgpiRequest $request, cgpi $cgpi)
     {
         if(!$cgpi) {
             return response()->json([
@@ -99,10 +88,8 @@ class CgpisController extends Controller
                 'email' => $request->input('email'),
                 'password' => bcrypt($password),
                 'num_tel' => $request->input('num_tel'),
-                'staff' => $request->input('staff'),
-            
             ]));
-            $details = [
+           /*$details = [
                 'greeting' => 'Hi '.$cgpi->name,
                 'body' => 'Congratulations for becoming an official cgpi with Weaplan !',
                 'credentials' => 'Here are your account credentials:',
@@ -112,24 +99,12 @@ class CgpisController extends Controller
                 'thanks' => 'Thank you !',
             ];
             Notification::send($cgpi, new AccessCredentials($details));
-
+*/
             return response()->json([
                 'status' => 200,
                 'cgpi' => new CgpiResource($cgpi)
             ]);
         }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdatecgpiRequest  $request
-     * @param  \App\Models\cgpi  $cgpi
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdatecgpiRequest $request, cgpi $cgpi)
-    {
-        //
     }
 
     /**

@@ -19,8 +19,6 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->bigInteger('num_tel');
-            $table->string('staff');
-            
             $table->timestamps();
         });
     }

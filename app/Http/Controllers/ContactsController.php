@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\contact;
-use App\Http\Requests\StorecontactRequest;
-use App\Http\Requests\UpdatecontactRequest;
+use App\Http\Requests\ContactRequest;
+use App\Http\Resources\ContactResource;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\AccessCredentials;
 use Illuminate\Support\Facades\Notification;
@@ -19,35 +19,24 @@ class ContactsController extends Controller
     {
         return response()->json([
             'status' => 200,
-            'contacts' => ContactResource::collection(Contact::all())
+            'contacts' => ContactResource::collection(contact::all())
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StorecontactRequest  $request
+     * @param  \App\Http\Requests\ContactRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorecontactRequest $request)
+    public function store(ContactRequest $request)
     {
-        $contact = Contact::create(([
+        $contact = contact::create(([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
             'num_tel' => $request->input('num_tel'),
             'company' => $request->input('company'),
-            
         ]));
 
         return response()->json([
@@ -79,24 +68,13 @@ class ContactsController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\contact  $contact
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(contact $contact)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdatecontactRequest  $request
+     * @param  \App\Http\Requests\ContactRequest  $request
      * @param  \App\Models\contact  $contact
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatecontactRequest $request, contact $contact)
+    public function update(ContactRequest $request, contact $contact)
     {
         if(!$contact) {
             return response()->json([
@@ -114,7 +92,7 @@ class ContactsController extends Controller
                 'company' => $request->input('company'),
                 
             ]));
-            $details = [
+            /*$details = [
                 'greeting' => 'Hi '.$contact->name,
                 'body' => 'Congratulations for becoming an official contact of Weaplan !',
                 'credentials' => 'Here are your account credentials:',
@@ -124,7 +102,7 @@ class ContactsController extends Controller
                 'thanks' => 'Thank you for choosing Weaplan !',
             ];
             Notification::send($contact, new AccessCredentials($details));
-
+*/
             return response()->json([
                 'status' => 200,
                 'contact' => new ContactResource($contact)

@@ -41,7 +41,8 @@ class CustomersController extends Controller
      */
     public function store(CustomerRequest $request)
     {
-        $customers = customers::create(([
+        $customer = customers::create(([
+            'cgpi_id' => $request->input('cgpi_id'),
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'num_tel' => $request->input('num_tel'),
@@ -54,7 +55,7 @@ class CustomersController extends Controller
 
         return response()->json([
             'status' => 200,
-            'customer' => new CustomerResource($customers)
+            'customer' => new CustomerResource($customer)
         ]);
     }
 
@@ -64,9 +65,9 @@ class CustomersController extends Controller
      * @param  \App\Models\customers  $customers
      * @return \Illuminate\Http\Response
      */
-    public function show(customers $customers)
+    public function show(customers $customer)
     {
-        if(!$customers) {
+        if(!$customer) {
             return response()->json([
                 'status' => 401,
                 'message' => 'The customer data does not exist'
@@ -75,7 +76,7 @@ class CustomersController extends Controller
         else {
             return response()->json([
                 'status' => 200,
-                'customer' => new CustomerResource($customers)
+                'customer' => new CustomerResource($customer)
             ]);
         }
     }
@@ -95,28 +96,28 @@ class CustomersController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\CustomerRequest  $request
-     * @param  \App\Models\customers  $customers
+     * @param  \App\Models\customers  $customer
      * @return \Illuminate\Http\Response
      */
-    public function update(CustomerRequest $request, customers $customers)
-    {
-        if(!$customers) {
+    public function update(CustomerRequest $request, customers $customer)
+    {   
+        if(!$customer) {
             return response()->json([
                 'status' => 401,
                 'message' => 'The customer data does not exist'
             ]);
         }
         else {
-           
-            $customers->update(([
+            $customer->update([
+                'cgpi_id' => $request->input('cgpi_id'),
                 'name' => $request->input('name'),
                 'email' => $request->input('email'),
                 'num_tel' => $request->input('num_tel'),
                 'raison_sociale' => $request->input('raison_sociale'),
                 'location' => $request->input('location'),
-            'industry' => $request->input('industry'),
-            'aum' => $request->input('aum'),
-            ]));
+                'industry' => $request->input('industry'),
+                'aum' => $request->input('aum'),
+            ]);
             /*$details = [
                 'greeting' => 'Hi '.$customers->name,
                 'body' => 'Congratulations for becoming an official client of E-Build !',
@@ -130,7 +131,7 @@ class CustomersController extends Controller
 */
             return response()->json([
                 'status' => 200,
-                'customer' => new CustomerResource($customers)
+                'customer' => new CustomerResource($customer)
             ]);
         }
     }
@@ -138,11 +139,24 @@ class CustomersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\customers  $customers
+     * @param  \App\Models\customers  $customer
      * @return \Illuminate\Http\Response
      */
-    public function destroy(customers $customers)
+    public function destroy(customers $customer)
     {
-        //
+        $customer = customers::where('id', $id)->first();
+        if(!$customer) {
+            return response()->json([
+                'status' => 401,
+                'message' => 'The client data does not exist'
+            ]);
+        }
+        else {
+            $customer->delete();
+            return response()->json([
+                'status' => 200,
+                'message' => 'Deleted successfully!'
+            ]);
+        }
     }
 }

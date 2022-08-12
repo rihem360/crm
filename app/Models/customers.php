@@ -14,6 +14,7 @@ class customers extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'cgpi_id',
         'name',
         'email',
         'num_tel',
@@ -34,6 +35,10 @@ class customers extends Model
         'updated_at'
     ];
 
+    public function cgpi()
+    {
+        return $this->belongsTo(cgpi::class);
+    }
     public function tickets()
     {
         return $this->hasMany(Ticket::class);

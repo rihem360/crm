@@ -35,4 +35,9 @@ class cgpi extends Authenticatable
         'created_at',
         'updated_at'
     ];
+
+    public function customers()
+    {
+        return $this->hasMany(customers::class);
+    }
 }

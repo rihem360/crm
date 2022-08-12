@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\documents;
-use App\Models\Operation;
+use App\Models\operations;
 use App\Http\Resources\DocumentResource;
 use App\Http\Resources\OperationResource;
 use App\Http\Requests\DocumentRequest;
@@ -19,29 +19,19 @@ class DocumentsController extends Controller
     {
         return response()->json([
             'status' => 200,
-            'documents' => DocumentResource::collection(Document::all())
+            'documents' => DocumentResource::collection(documents::all())
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoredocumentsRequest  $request
+     * @param  \App\Http\Requests\DocumentRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoredocumentsRequest $request)
+    public function store(DocumentRequest $request)
     {
-        $documents = Documents::create([
+        $document = documents::create([
             'contact_id' => $request->input('contact_id'),
             'type_doc' => $request->input('type_doc'),
             'info_supp' => $request->input('info_supp'),
@@ -50,8 +40,8 @@ class DocumentsController extends Controller
         $operations = array();
         $operations = $request->input('operations');
         foreach($operations as $op) {
-            $operation = Operation::create([
-                'document_id' => $documents->id,
+            $operation = operations::create([
+                'document_id' => $document->id,
                 'nature_operation' => $op['nature_operation'],
                 'montant_HT' => $op['montant_HT'],
                 'montant_TVA' => $op['montant_TVA']
@@ -59,20 +49,20 @@ class DocumentsController extends Controller
         }
         return response()->json([
             'status' => 200,
-            'document' => new DocumentResource($documents),
-            'operations' => OperationResource::collection($documents->operations)
+            'document' => new DocumentResource($document),
+            'operations' => OperationResource::collection($document->operations)
         ]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\documents  $documents
+     * @param  \App\Models\documents  $document
      * @return \Illuminate\Http\Response
      */
-    public function show(documents $documents)
+    public function show(documents $document)
     {
-        if(!$documents) {
+        if(!$document) {
             return response()->json([
                 'status' => 401,
                 'message' => 'The document data does not exist'
@@ -80,38 +70,27 @@ class DocumentsController extends Controller
         }
         return response()->json([
             'status' => 200,
-            'document' => new DocumentResource($documents),
-            'operations' => OperationResource::collection($documents->operations)
+            'document' => new DocumentResource($document),
+            'operations' => OperationResource::collection($document->operations)
         ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\documents  $documents
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(documents $documents)
-    {
-        //
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdatedocumentsRequest  $request
+     * @param  \App\Http\Requests\DocumentsRequest  $request
      * @param  \App\Models\documents  $documents
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatedocumentsRequest $request, documents $documents)
+    public function update(DocumentsRequest $request, documents $document)
     {
-        if(!$team) {
+        if(!$document) {
             return response()->json([
                 'status' => 401,
                 'message' => 'The document data does not exist'
             ]);
         }
-        $documents->update([
+        $document->update([
             'contact_id' => $request->input('contact_id'),
             'type_doc' => $request->input('type_doc'),
             'info_supp' => $request->input('info_supp'),
@@ -121,35 +100,35 @@ class DocumentsController extends Controller
         $operations = $request->input('operations');
         foreach($operations as $op) {
             $operation = Operation::create([
-                'document_id' => $documents->id,
+                'document_id' => $document->id,
                 'nature_operation' => $op->nature_operation,
-                'montant_HT' => $op->montant_HT,
-                'montant_TVA' => $op->montant_TVA
+                'montant_HT' => $op['montant_HT'],
+                'montant_TVA' => $op['montant_TVA']
             ]);
         }
         return response()->json([
             'status' => 200,
-            'document' => new DocumentResource($documents),
-            'operations' => OperationResource::collection($documents->operations)
+            'document' => new DocumentResource($document),
+            'operations' => OperationResource::collection($document->operations)
         ]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\documents  $documents
+     * @param  \App\Models\documents  $document
      * @return \Illuminate\Http\Response
      */
-    public function destroy(documents $documents)
+    public function destroy(documents $document)
     {
-        if(!$documents) {
+        if(!$document) {
             return response()->json([
                 'status' => 401,
                 'message' => 'The document data does not exist'
             ]);
         }
         else {
-            $documents->delete();
+            $document->delete();
             return response()->json([
                 'status' => 204,
                 'message' => 'Deleted successfully!'

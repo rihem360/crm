@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->bigInteger('cgpi_id')->unsigned(); 
             $table->string('name');
             $table->string('email')->unique();
             $table->bigInteger('num_tel');
@@ -23,6 +24,11 @@ return new class extends Migration
             $table->string('industry');
             $table->bigInteger('aum');
             $table->timestamps();
+
+            $table->foreign('cgpi_id')
+                ->references('id')
+                ->on('cgpis')
+                ->onDelete('cascade');
         });
     }
 
