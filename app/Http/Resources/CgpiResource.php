@@ -19,7 +19,6 @@ class CgpiResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'num_tel' => $this->num_tel,
-            'staff' => $this->staff,
         
         ];
     }

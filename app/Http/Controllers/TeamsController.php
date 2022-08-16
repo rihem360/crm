@@ -37,7 +37,7 @@ class TeamsController extends Controller
         $members = array();
         $members = $request->input("staff");
         foreach($members as $staff) {
-            $teams->staff()->attach($staff);
+            $team->staff()->attach($staff);
         }
         return response()->json([
             'status' => 200,
@@ -94,7 +94,7 @@ class TeamsController extends Controller
             $members = array();
             $members = $request->input("staff");
             foreach($members as $staff) {
-                $teams->staff()->attach($staff);
+                $team->staff()->attach($staff);
             }
             return response()->json([
                 'status' => 200,

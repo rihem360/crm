@@ -15,8 +15,8 @@ class tickets extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'client_id',
-        'projet_id',
+        'contact_id',
+        'project_id',
         'titre',
         'description',
         'file'
@@ -32,6 +32,6 @@ class tickets extends Model
     }
     public function responses()
     {
-        return $this->hasMany(Response::class);
+        return $this->hasMany(responses::class);
     }
 }

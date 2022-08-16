@@ -35,7 +35,7 @@ class SubtasksController extends Controller
     {
         $subtask = subtask::create(([
             'task_id' => $request->input('task_id'),
-            'staffl_id' => $request->input('staff_id'),
+            'staff_id' => $request->input('staff_id'),
             'titre' => $request->input('titre'),
             'deadline' => $request->input('deadline'),
             'description' => $request->input('description'),

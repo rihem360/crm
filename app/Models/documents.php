@@ -23,6 +23,6 @@ class documents extends Model
 
     public function operations()
     {
-        return $this->hasMany(Operation::class);
+        return $this->hasMany(operations::class);
     }
 }

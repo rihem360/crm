@@ -40,8 +40,8 @@ class DocumentsController extends Controller
         $operations = array();
         $operations = $request->input('operations');
         foreach($operations as $op) {
-            $operation = operations::create([
-                'document_id' => $document->id,
+            $operations = operations::create([
+                'documents_id' => $document->id,
                 'nature_operation' => $op['nature_operation'],
                 'montant_HT' => $op['montant_HT'],
                 'montant_TVA' => $op['montant_TVA']
@@ -78,11 +78,11 @@ class DocumentsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\DocumentsRequest  $request
+     * @param  \App\Http\Requests\DocumentRequest  $request
      * @param  \App\Models\documents  $documents
      * @return \Illuminate\Http\Response
      */
-    public function update(DocumentsRequest $request, documents $document)
+    public function update(DocumentRequest $request, documents $document)
     {
         if(!$document) {
             return response()->json([
@@ -99,9 +99,9 @@ class DocumentsController extends Controller
         $operations = array();
         $operations = $request->input('operations');
         foreach($operations as $op) {
-            $operation = Operation::create([
-                'document_id' => $document->id,
-                'nature_operation' => $op->nature_operation,
+            $operation = Operations::create([
+                'documents_id' => $document->id,
+                'nature_operation' => $op['nature_operation'],
                 'montant_HT' => $op['montant_HT'],
                 'montant_TVA' => $op['montant_TVA']
             ]);

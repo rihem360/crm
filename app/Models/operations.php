@@ -14,7 +14,7 @@ class operations extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'document_id',
+        'documents_id',
         'nature_operation',
         'montant_HT',
         'montant_TVA'
@@ -22,7 +22,7 @@ class operations extends Model
 
     public function document()
     {
-        return $this->belongsTo(Document::class);
+        return $this->belongsTo(Documents::class);
     }
     
 }

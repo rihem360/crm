@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Contact;
 use App\Http\Resources\ContactResource;
 use App\Models\Staff;
+use App\Models\cgpi;
 use App\Http\Resources\StaffResource;
+use App\Http\Resources\CgpiResource;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\PasswordReset;
 use Illuminate\Support\Facades\Notification;
@@ -24,11 +26,26 @@ class AuthController extends Controller
         $staff = Staff::where('email', $request->email)->first();
         if (!$staff || !Hash::check($request->password, $staff->password)) {
             $contact = Contact::where('email', $request->email)->first();
-            if (!$contact || !Hash::check($request->password, $contact->password)) {
-                return response()->json([
-                    'status' => 401,
-                    'message' => 'The provided credentials are incorrect.'
-                ]);
+            if (!$contact || !Hash::check($request->password, $contact->password)) 
+            {
+                $cgpi= cgpi::where('email', $request->email)->first();
+                if(!$cgpi || !Hash::check($request->password, $cgpi->password)){
+                    return response()->json([
+                        'status' => 401,
+                        'message' => 'The provided credentials are incorrect.'
+                        
+                    ]);
+
+                } 
+                else
+                {
+                    return response()->json([
+                        'status' => 200,
+                        'cgpi' => new CgpiResource($cgpi),
+                        'token' => $cgpi->createToken('Weaplan', ['role:cgpi'])->plainTextToken
+                    ]);
+                }
+                
             }
             else {
                 return response()->json([
@@ -54,6 +71,7 @@ class AuthController extends Controller
                     'token' => $staff->createToken('Weaplan', ['role:staff'])->plainTextToken
                 ]);
             }
+             
         }
     }
 
@@ -72,7 +90,7 @@ class AuthController extends Controller
                     'url' => 'http://127.0.0.1:8000/clientpassReset/'.$contact->id,
                     'thanks' => 'Thank you for using our CRM !',
                 ];
-                Notification::send($contact, new PasswordReset($details));
+                Notification::send($cgpi, new PasswordReset($details));
                 return response()->json([
                     'status' => 200,
                     'message' => 'Email sent !'
@@ -85,7 +103,7 @@ class AuthController extends Controller
                     'url' => 'http://127.0.0.1:8000/clientpassReset/'.$cgpi->id,
                     'thanks' => 'Thank you for using our CRM !',
                 ];
-                Notification::send($contact, new PasswordReset($details));
+                Notification::send($cgpi, new PasswordReset($details));
                 return response()->json([
                     'status' => 200,
                     'message' => 'Email sent !'

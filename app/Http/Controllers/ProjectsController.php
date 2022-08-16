@@ -101,7 +101,7 @@ class ProjectsController extends Controller
 
             return response()->json([
                 'status' => 200,
-                'projet' => new ProjetResource($project)
+                'projet' => new ProjectResource($project)
             ]);
         }
     }

@@ -88,7 +88,7 @@ class TicketsController extends Controller
         else {
             $ticket->update(([
                 'contact_id' => $request->input('contact_id'),
-                'project_id' => $request->input('projet_id'),
+                'project_id' => $request->input('project_id'),
                 'titre' => $request->input('titre'),
                 'description' => $request->input('description'),
                 'file' => $request->input('file')

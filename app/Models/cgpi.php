@@ -22,7 +22,6 @@ class cgpi extends Authenticatable
         'email',
         'password',
         'num_tel',
-        'staff'
     ];
 
     /**

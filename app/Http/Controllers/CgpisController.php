@@ -59,9 +59,11 @@ class CgpisController extends Controller
             ]);
         }
         else {
+            $customers = $cgpi->customers;
             return response()->json([
                 'status' => 200,
-                'cgpi' => new CgpiResource($cgpi)
+                'cgpi' => new CgpiResource($cgpi),
+                'customers'=> $customers
             ]);
         }
     }

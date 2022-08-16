@@ -144,7 +144,7 @@ class CustomersController extends Controller
      */
     public function destroy(customers $customer)
     {
-        $customer = customers::where('id', $id)->first();
+        //$customer = customers::where('id', $id)->first();
         if(!$customer) {
             return response()->json([
                 'status' => 401,

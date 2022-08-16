@@ -34,7 +34,7 @@ class ResponsesController extends Controller
      */
     public function store(ResponseRequest $request)
     {
-        $responses = Response::create(([
+        $responses = Responses::create(([
             'staff_id' => $request->input('staff_id'),
             'ticket_id' => $request->input('ticket_id'),
             'titre' => $request->input('titre'),
@@ -89,7 +89,8 @@ class ResponsesController extends Controller
             ]);
         }
         else {
-            $response = update(([
+            $response -> update(([
+                'staff_id' => $request->input('staff_id'),
                 'ticket_id' => $request->input('ticket_id'),
                 'titre' => $request->input('titre'),
                 'description' => $request->input('description'),
